@@ -79,7 +79,7 @@ CONFIG_AP_WOWLAN = n
 ######### Notify SDIO Host Keep Power During Syspend ##########
 CONFIG_RTW_SDIO_PM_KEEP_POWER = y
 ###################### Platform Related #######################
-CONFIG_PLATFORM_I386_PC = y
+CONFIG_PLATFORM_I386_PC = n
 CONFIG_PLATFORM_ARM_RPI = n
 CONFIG_PLATFORM_ARM64 = n
 CONFIG_PLATFORM_ANDROID_X86 = n
@@ -126,6 +126,9 @@ CONFIG_PLATFORM_ARM_RTD299X = n
 CONFIG_PLATFORM_ARM_SPREADTRUM_6820 = n
 CONFIG_PLATFORM_ARM_SPREADTRUM_8810 = n
 CONFIG_PLATFORM_ARM_WMT = n
+# iW-RainboW-G15S
+# See also: CONFIG_PLATFORM_ARM_MX51_241H, CONFIG_PLATFORM_FS_MX61, CONFIG_USB_HCI
+CONFIG_PLATFORM_ARM_IWG15 = y
 CONFIG_PLATFORM_TI_DM365 = n
 CONFIG_PLATFORM_MOZART = n
 CONFIG_PLATFORM_RTK119X = n
@@ -928,6 +931,27 @@ KVER ?= $(shell uname -r)
 KSRC := /lib/modules/$(KVER)/build
 MODDESTDIR := /lib/modules/$(KVER)/kernel/drivers/net/wireless/
 INSTALL_PREFIX :=
+endif
+
+# iW-RainboW-G15S
+# See also: CONFIG_PLATFORM_ARM_MX51_241H, CONFIG_PLATFORM_FS_MX61, CONFIG_USB_HCI
+# in Makefile of rtl8812au-1 project or this file
+# Need for Archer T2U Nano
+ifeq ($(CONFIG_PLATFORM_ARM_IWG15), y)
+EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN -DCONFIG_WISTRON_PLATFORM
+#EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+ARCH := arm
+SDK_PREFIX := /huge/user/aso/job/NXP/RainboW/Android/bspsrc/build/android_L5
+CROSS_COMPILE := $(SDK_PREFIX)/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6/bin/arm-eabi-
+# Linux/x86 3.10.53 Kernel Configuration
+KVER := 3.10.53
+#KSRC := /lib/modules/$(KVER)/build
+KSRC := $(SDK_PREFIX)/kernel_imx
+#EXTRA_CFLAGS += -fno-pic (?)
+#MODDESTDIR := /lib/modules/$(KVER)/kernel/drivers/net/wireless/
+INSTALL_PREFIX :=
+# Need for Archer T2U Nano
+MODULE_NAME := T2Unano8812au
 endif
 
 ifeq ($(CONFIG_PLATFORM_ACTIONS_ATM702X), y)
