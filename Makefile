@@ -959,25 +959,28 @@ EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 
 ifeq ($(CONFIG_USB_HCI), y)
 EXTRA_CFLAGS += -DCONFIG_USE_USB_BUFFER_ALLOC_TX
+# it's needed or not???
+#EXTRA_CFLAGS += -DCONFIG_USE_USB_BUFFER_ALLOC_RX
 #_PLATFORM_FILES += platform/platform_ARM_SUNxI_usb.o
 endif
 
-# it's needed or not, or entry in CONFIG_USB_HCI ???
-#EXTRA_CFLAGS += -DCONFIG_USE_USB_BUFFER_ALLOC_RX
-
+# not use position-independed code
+#EXTRA_CFLAGS += -fno-pic
 
 ARCH := arm
 SDK_PREFIX := /huge/user/aso/job/NXP/RainboW/Android/bspsrc/build/android_L5
 CROSS_COMPILE := $(SDK_PREFIX)/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6/bin/arm-eabi-
 # Linux/x86 3.10.53 Kernel Configuration
-KVER := 3.10.53
+#KVER := 3.10.53
+KVER ?= 3.10.53
 #KSRC := /lib/modules/$(KVER)/build
 KSRC := $(SDK_PREFIX)/kernel_imx
 #EXTRA_CFLAGS += -fno-pic (?)
 #MODDESTDIR := /lib/modules/$(KVER)/kernel/drivers/net/wireless/
 INSTALL_PREFIX :=
 # Need for Archer T2U Nano
-MODULE_NAME := T2Unano8812au
+MODULE_NAME := wlt2un8812au
+#MODULE_NAME := T2Unano8812au
 #MODULE_NAME := wlan
 endif
 
