@@ -1775,26 +1775,30 @@ clean:
 	rm -fr .tmp_versions
 
 OUTPUT_DIR := output
+#List of output files
 OUTPUT_LIST := ifcfg-wlan0 \
 		Kconfig \
 		LICENSE \
 		modules.order \
 		Module.symvers \
 		runwpa \
-		$(MODULE_NAME).ko \
-		$(MODULE_NAME).mod.c \
-		$(MODULE_NAME).mod.o \
-		$(MODULE_NAME).o \
+		$(addprefix $(MODULE_NAME)., ko mod.c mod.o o) \
 		wlan0dhcp
 
-.PHONY: output output_clean
+.PHONY: output output_clean .output_dir
 
-output-clean:
-	@echo rm $(OUTPUT_DIR)/$(OUTPUT_LIST)
-	@echo rm $(OUTPUT_DIR)/*
-	
-output:
-	@echo cp $(OUTPUT_LIST) $(OUTPUT_DIR)
+clean-output:
+	@echo Clean output dir \'$(OUTPUT_DIR)\'
+	@rm $(OUTPUT_DIR)/*
 
+output: .output_dir $(addprefix $(OUTPUT_DIR)/, $(OUTPUT_LIST))
+	@echo Store output files into \'$(OUTPUT_DIR)\'
+	@cp modules-output.list $(OUTPUT_DIR)/
+
+.output_dir:
+	@mkdir -p $(OUTPUT_DIR)
+
+$(addprefix $(OUTPUT_DIR)/, $(OUTPUT_LIST)): $(OUTPUT_DIR)/%: %
+	@cp $< $@
 endif
 
