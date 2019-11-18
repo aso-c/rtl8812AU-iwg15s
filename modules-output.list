@@ -1,0 +1,12 @@
+ifcfg-wlan0
+Kconfig
+LICENSE
+modules.order
+Module.symvers
+runwpa
+wlt2un8812au.ko
+wlt2un8812au.mod.c
+wlt2un8812au.mod.o
+wlt2un8812au.o
+wlan0dhcp
+

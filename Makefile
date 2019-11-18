@@ -979,9 +979,8 @@ KSRC := $(SDK_PREFIX)/kernel_imx
 #MODDESTDIR := /lib/modules/$(KVER)/kernel/drivers/net/wireless/
 INSTALL_PREFIX :=
 # Need for Archer T2U Nano
-MODULE_NAME := wlt2un8812au
-#MODULE_NAME := T2Unano8812au
-#MODULE_NAME := wlan
+USER_MODULE_NAME := wl_8812au
+#MODULE_NAME := wl_8812au
 endif
 
 ifeq ($(CONFIG_PLATFORM_ACTIONS_ATM702X), y)
@@ -1774,5 +1773,28 @@ clean:
 	rm -fr Module.symvers ; rm -fr Module.markers ; rm -fr modules.order
 	rm -fr *.mod.c *.mod *.o .*.cmd *.ko *~
 	rm -fr .tmp_versions
+
+OUTPUT_DIR := output
+OUTPUT_LIST := ifcfg-wlan0 \
+		Kconfig \
+		LICENSE \
+		modules.order \
+		Module.symvers \
+		runwpa \
+		$(MODULE_NAME).ko \
+		$(MODULE_NAME).mod.c \
+		$(MODULE_NAME).mod.o \
+		$(MODULE_NAME).o \
+		wlan0dhcp
+
+.PHONY: output output_clean
+
+output-clean:
+	@echo rm $(OUTPUT_DIR)/$(OUTPUT_LIST)
+	@echo rm $(OUTPUT_DIR)/*
+	
+output:
+	@echo cp $(OUTPUT_LIST) $(OUTPUT_DIR)
+
 endif
 
