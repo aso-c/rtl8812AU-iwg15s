@@ -33,7 +33,7 @@ CONFIG_AUTOCFG_CP = n
 CONFIG_MULTIDRV = n
 CONFIG_RTL8188E = n
 CONFIG_RTL8812A = y
-CONFIG_RTL8821A = n
+CONFIG_RTL8821A = y
 CONFIG_RTL8192E = n
 CONFIG_RTL8723B = n
 CONFIG_RTL8814A = n
@@ -934,6 +934,7 @@ INSTALL_PREFIX :=
 endif
 
 # iW-RainboW-G15S
+# (in project aso-c/rtl8812AU-iwg15s, forked from diederikdehaas/rtl8812AU)
 # See also: CONFIG_PLATFORM_ARM_MX51_241H, CONFIG_PLATFORM_FS_MX61, CONFIG_USB_HCI
 # in Makefile of rtl8812au-1 project or this file
 # Need for Archer T2U Nano

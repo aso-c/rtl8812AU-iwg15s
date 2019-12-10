@@ -170,7 +170,7 @@ static struct usb_device_id rtw_usb_id_tbl[] ={
 	{USB_DEVICE(0x2357, 0x0101),.driver_info = RTL8812}, /* TP-Link - Archer T4U AC1200 */
 	{USB_DEVICE(0x2357, 0x010d),.driver_info = RTL8812}, /* TP-Link - Archer T4U AC1300 */
 	{USB_DEVICE(0x2357, 0x0103),.driver_info = RTL8812}, /* TP-Link - T4UH */
-	{USB_DEVICE(0x2357, 0x011E),.driver_info = RTL8812}, /* TP-Link - Archer T2U nano */
+//	{USB_DEVICE(0x2357, 0x011E),.driver_info = RTL8812}, /* TP-Link - Archer T2U nano */
 	{USB_DEVICE(0x2604, 0x0012),.driver_info = RTL8812}, /* Tenda - U12 */
 	{USB_DEVICE(0x7392, 0xA822),.driver_info = RTL8812}, /* Edimax - EW-7822UAC */
 
@@ -198,7 +198,7 @@ static struct usb_device_id rtw_usb_id_tbl[] ={
 	{USB_DEVICE(0x7392, 0xA811),.driver_info = RTL8821}, /* Edimax - Edimax */
 	{USB_DEVICE(0x7392, 0xA812),.driver_info = RTL8821}, /* Edimax - EW-7811UTC */
 	{USB_DEVICE(0x7392, 0xA813),.driver_info = RTL8821}, /* Edimax - EW-7811UAC */
-//	{USB_DEVICE(0x2357, 0x011E),.driver_info = RTL8811}, /* TP-Link - Archer T2U nano */
+	{USB_DEVICE(0x2357, 0x011E),.driver_info = RTL8821}, /* TP-Link - Archer T2U nano */
 #endif
 
 #ifdef CONFIG_RTL8192E
