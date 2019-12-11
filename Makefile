@@ -116,7 +116,7 @@ CONFIG_RTW_SDIO_PM_KEEP_POWER = y
 ###################### MP HW TX MODE FOR VHT #######################
 CONFIG_MP_VHT_HW_TX_MODE = n
 ###################### Platform Related #######################
-CONFIG_PLATFORM_I386_PC = y
+CONFIG_PLATFORM_I386_PC = n
 CONFIG_PLATFORM_ARM_RPI = n
 CONFIG_PLATFORM_ARM64 = n
 CONFIG_PLATFORM_ANDROID_X86 = n
@@ -165,6 +165,9 @@ CONFIG_PLATFORM_ARM_LGE = n
 CONFIG_PLATFORM_ARM_SPREADTRUM_6820 = n
 CONFIG_PLATFORM_ARM_SPREADTRUM_8810 = n
 CONFIG_PLATFORM_ARM_WMT = n
+# iW-RainboW-G15S
+# See also: CONFIG_PLATFORM_ARM_MX51_241H, CONFIG_PLATFORM_FS_MX61, CONFIG_USB_HCI
+CONFIG_PLATFORM_ARM_IWG15 = y
 CONFIG_PLATFORM_TI_DM365 = n
 CONFIG_PLATFORM_MOZART = n
 CONFIG_PLATFORM_RTK119X = n
@@ -1268,6 +1271,56 @@ MODDESTDIR := /lib/modules/$(KVER)/kernel/drivers/net/wireless/
 INSTALL_PREFIX :=
 endif
 
+# iW-RainboW-G15S
+# (in project aso-c/rtl8812AU-iwg15s, forked from diederikdehaas/rtl8812AU)
+# See also: CONFIG_PLATFORM_ARM_MX51_241H, CONFIG_PLATFORM_FS_MX61, CONFIG_USB_HCI
+# in Makefile of rtl8812au-1 project or this file
+# Need for Archer T2U Nano
+ifeq ($(CONFIG_PLATFORM_ARM_IWG15), y)
+EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+EXTRA_CFLAGS += -DCONFIG_WISTRON_PLATFORM
+#EXTRA_CFLAGS += -DCONFIG_TRAFFIC_PROTECT
+
+# EDefault setting for Android 4.1, 4.2 (?)
+#EXTRA_CFLAGS += -DCONFIG_PLATFORM_ANDROID
+EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
+EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+# default setting for Power control
+EXTRA_CFLAGS += -DRTW_ENABLE_WIFI_CONTROL_FUNC
+#EXTRA_CFLAGS += -DRTW_SUPPORT_PLATFORM_SHUTDOWN (no enable!!!)
+# default setting for Special function
+#EXTRA_CFLAGS += -DCONFIG_P2P_IPS
+EXTRA_CFLAGS += -DCONFIG_QOS_OPTIMIZATION
+
+
+# Enable this for Android 5.0
+#EXTRA_CFLAGS += -DCONFIG_RADIO_WORK
+
+ifeq ($(CONFIG_USB_HCI), y)
+EXTRA_CFLAGS += -DCONFIG_USE_USB_BUFFER_ALLOC_TX
+# it's needed or not???
+EXTRA_CFLAGS += -DCONFIG_USE_USB_BUFFER_ALLOC_RX
+#_PLATFORM_FILES += platform/platform_ARM_SUNxI_usb.o
+endif
+
+# not use position-independed code
+#EXTRA_CFLAGS += -fno-pic
+
+ARCH := arm
+SDK_PREFIX := /huge/user/aso/job/NXP/RainboW/Android/bspsrc/build/android_L5
+CROSS_COMPILE := $(SDK_PREFIX)/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6/bin/arm-eabi-
+# Linux/x86 3.10.53 Kernel Configuration
+#KVER := 3.10.53
+KVER ?= 3.10.53
+#KSRC := /lib/modules/$(KVER)/build
+KSRC := $(SDK_PREFIX)/kernel_imx
+#MODDESTDIR := /lib/modules/$(KVER)/kernel/drivers/net/wireless/
+INSTALL_PREFIX :=
+# Need for Archer T2U Nano
+USER_MODULE_NAME := wl_8812au
+#MODULE_NAME := wl_8812au
+endif
+
 ifeq ($(CONFIG_PLATFORM_NV_TK1), y)
 EXTRA_CFLAGS += -DCONFIG_PLATFORM_NV_TK1
 EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
@@ -2355,5 +2408,34 @@ clean:
 	rm -fr Module.symvers ; rm -fr Module.markers ; rm -fr modules.order
 	rm -fr *.mod.c *.mod *.o .*.cmd *.ko *~
 	rm -fr .tmp_versions
+
+OUTPUT_DIR := OUT
+#List of output files
+OUTPUT_LIST := ifcfg-wlan0 \
+		Kconfig \
+		LICENSE \
+		modules.order \
+		Module.symvers \
+		runwpa \
+		$(addprefix $(MODULE_NAME)., ko mod.c mod.o o) \
+		wlan0dhcp
+
+
+.PHONY: output output_clean .output_dir
+
+clean-output:
+	@echo Clean output dir '<<'$(OUTPUT_DIR)'>>'
+	@rm $(OUTPUT_DIR)/*
+
+output: .output_dir $(addprefix $(OUTPUT_DIR)/, $(OUTPUT_LIST))
+	@echo Store output files into '<<'$(OUTPUT_DIR)'>>'
+	@cp modules-output.list $(OUTPUT_DIR)/
+
+.output_dir:
+	@mkdir -p $(OUTPUT_DIR)
+
+$(addprefix $(OUTPUT_DIR)/, $(OUTPUT_LIST)): $(OUTPUT_DIR)/%: %
+	@cp $< $@
+
 endif
 
