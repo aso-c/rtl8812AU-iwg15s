@@ -2409,7 +2409,17 @@ clean:
 	rm -fr *.mod.c *.mod *.o .*.cmd *.ko *~
 	rm -fr .tmp_versions
 
+.PHONY: output output_clean .output_dir
+
 OUTPUT_DIR := OUT
+
+clean-output:
+	@echo Clean output dir '<<'$(OUTPUT_DIR)'>>'
+	@rm $(OUTPUT_DIR)/*
+	@rmdir $(OUTPUT_DIR)
+
+ifeq ($(CONFIG_PLATFORM_ARM_IWG15), y)
+
 #List of output files
 OUTPUT_LIST := ifcfg-wlan0 \
 		Kconfig \
@@ -2417,25 +2427,22 @@ OUTPUT_LIST := ifcfg-wlan0 \
 		modules.order \
 		Module.symvers \
 		runwpa \
-		$(addprefix $(MODULE_NAME)., ko mod.c mod.o o) \
-		wlan0dhcp
+		wlan0dhcp \
+		$(addprefix $(MODULE_NAME)., ko)
+#		$(addprefix $(MODULE_NAME)., ko mod.c mod.o o)
 
-
-.PHONY: output output_clean .output_dir
-
-clean-output:
-	@echo Clean output dir '<<'$(OUTPUT_DIR)'>>'
-	@rm $(OUTPUT_DIR)/*
+OUTPUT_LIST_NAME := modules-output.list
 
 output: .output_dir $(addprefix $(OUTPUT_DIR)/, $(OUTPUT_LIST))
 	@echo Store output files into '<<'$(OUTPUT_DIR)'>>'
-	@cp modules-output.list $(OUTPUT_DIR)/
+	@for a in $(OUTPUT_LIST); do echo $$a; done > $(OUTPUT_DIR)/$(OUTPUT_LIST_NAME)
 
 .output_dir:
 	@mkdir -p $(OUTPUT_DIR)
 
 $(addprefix $(OUTPUT_DIR)/, $(OUTPUT_LIST)): $(OUTPUT_DIR)/%: %
 	@cp $< $@
+endif
 
 endif
 
