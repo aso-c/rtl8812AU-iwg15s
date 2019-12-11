@@ -37,7 +37,7 @@ CONFIG_AUTOCFG_CP = n
 CONFIG_MULTIDRV = n
 CONFIG_RTL8188E = n
 CONFIG_RTL8812A = y
-CONFIG_RTL8821A = n
+CONFIG_RTL8821A = y
 CONFIG_RTL8192E = n
 CONFIG_RTL8723B = n
 CONFIG_RTL8814A = n
@@ -2415,8 +2415,8 @@ OUTPUT_DIR := OUT
 
 clean-output:
 	@echo Clean output dir '<<'$(OUTPUT_DIR)'>>'
-	@rm $(OUTPUT_DIR)/*
-	@rmdir $(OUTPUT_DIR)
+	rm $(OUTPUT_DIR)/*
+	rmdir $(OUTPUT_DIR)
 
 ifeq ($(CONFIG_PLATFORM_ARM_IWG15), y)
 
@@ -2434,7 +2434,7 @@ OUTPUT_LIST := ifcfg-wlan0 \
 OUTPUT_LIST_NAME := modules-output.list
 
 output: .output_dir $(addprefix $(OUTPUT_DIR)/, $(OUTPUT_LIST))
-	@echo Store output files into '<<'$(OUTPUT_DIR)'>>'
+	@echo Output files POSTED to '<<'$(OUTPUT_DIR)'>>'
 	@for a in $(OUTPUT_LIST); do echo $$a; done > $(OUTPUT_DIR)/$(OUTPUT_LIST_NAME)
 
 .output_dir:
